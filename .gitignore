@@ -1,0 +1,30 @@
+.DS_Store
+.idea
+.settings/
+*.log
+tmp/
+va
+
+# Eclipse
+.settings/
+.project
+.classpath
+bin/
+
+# Maven/Gradle
+target/
+build/
+out/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+
+# VS Code
+.settings/
+.vscode/
+
+# Arquivos temporários
+*.log
+*.tmp
