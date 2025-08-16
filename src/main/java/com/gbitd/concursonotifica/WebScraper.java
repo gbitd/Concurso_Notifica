@@ -11,6 +11,9 @@ import org.jsoup.select.Elements;
 // Atualmente só conecta à página e lista as entradas.
 // Fazer lógica para comparar entradas atuais com o registro anterior. Caso haja nova entrada, disparar o e-mail.
 // Transformar em classe comum e criar outra Main
+//
+// Checar se há segunda página, se sim, fazer webscrapping da última página
+// Criar arquivo data.dat caso não exista. Armazenar na primeira linha em que página está, e na segunda linha quantos itens (Criar classe repository para isso)
 public class WebScraper {
     public static void main(String[] args) {
         String url = "https://prh.uem.br/res/concurso-publico/edital-n-o-175-2025-prh-concurso-publico-analista-de-informatica-contador-assistente-social-engenheiro-civil-e-engenheiro-eletricista";
