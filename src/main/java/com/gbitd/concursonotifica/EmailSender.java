@@ -13,29 +13,71 @@ public class EmailSender {
 
     private Email email;
     private Mailer mailer;
+    private String userSmtp;
+    private String passwordSmtp;
+    private String hostSmtp;
+    private Integer portSmtp;
+    private String sender;
+    private String receiver;
 
-    public EmailSender(Email email, Mailer mailer) {
-        this.email = email;
-        this.mailer = mailer;
-    }
 
-    public EmailSender() {
+
+    public EmailSender(String userSmtp, String passwordSmtp, String hostSmtp, Integer portSmtp, String sender,
+            String receiver) {
+        this.userSmtp = userSmtp;
+        this.passwordSmtp = passwordSmtp;
+        this.hostSmtp = hostSmtp;
+        this.portSmtp = portSmtp;
+        this.sender = sender;
+        this.receiver = receiver;
+
         this.email = EmailBuilder.startingBlank()
-            .from("lollypop", "lolly.pop@pretzelfun.com")
-            .to("C. Cane", "candycane@candyshop.org")
-            .cc("C. Bo <chocobo@candyshop.org>")
-            .withSubject("hey")
-            .withPlainText("We should meet up! ;)")
+            .from("Alerta Concurso", sender)
+            .to("Concurseiro", receiver)
+            .withSubject("Alerta: Nova atualização sobre o concurso")
+            .withPlainText("Nova atualização sobre o concurso. Acessar o site")
             .buildEmail();
 
         this.mailer = MailerBuilder
-            .withSMTPServer("live.smtp.mailtrap.io", 587, "1a2b3c4d5e6f7g", "password")
+            .withSMTPServer(hostSmtp, portSmtp, userSmtp, passwordSmtp)
             .withTransportStrategy(TransportStrategy.SMTP)
             .buildMailer();
     }
 
     public void sendEmail(){
         mailer.sendMail(email);
+    }
+
+    public Email getEmail() {
+        return email;
+    }
+
+    public void setEmail(Email email) {
+        this.email = email;
+    }
+
+    public Mailer getMailer() {
+        return mailer;
+    }
+
+    public void setMailer(Mailer mailer) {
+        this.mailer = mailer;
+    }
+
+    public String getUserSmtp() {
+        return userSmtp;
+    }
+
+    public void setUserSmtp(String userSmtp) {
+        this.userSmtp = userSmtp;
+    }
+
+    public String getPasswordSmtp() {
+        return passwordSmtp;
+    }
+
+    public void setPasswordSmtp(String passwordSmtp) {
+        this.passwordSmtp = passwordSmtp;
     }
 
 
