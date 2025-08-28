@@ -35,7 +35,7 @@ public class EmailSender {
             .from("Alerta Concurso", sender)
             .to("Concurseiro", receiver)
             .withSubject("Alerta: Nova atualização sobre o concurso")
-            .withPlainText("Nova atualização sobre o concurso. Acessar o site")
+            .withPlainText("Nova atualização sobre o concurso. Acessar o site: https://prh.uem.br/res/concurso-publico/edital-n-o-175-2025-prh-concurso-publico-analista-de-informatica-contador-assistente-social-engenheiro-civil-e-engenheiro-eletricista")
             .buildEmail();
 
         this.mailer = MailerBuilder
