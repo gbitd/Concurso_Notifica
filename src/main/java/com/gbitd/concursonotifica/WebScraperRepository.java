@@ -10,44 +10,15 @@ import java.util.Scanner;
  */
 public class WebScraperRepository {
 
-	private int lastPage;
     private int numberOfItems;
     private File dataFile;
     private boolean isEmpty;
 
 
-
-
-
-    public WebScraperRepository() {
-        this.dataFile = new File("data.txt");
-        this.isEmpty = true; // Assume vazio até ler com sucesso
-
-        // Se o arquivo não existe, cria vazio
-        if (!dataFile.exists()) {
-            try {
-                dataFile.createNewFile();
-            } catch (IOException e) {
-                System.err.println("Erro ao criar arquivo: " + e.getMessage());
-                return;
-            }
-        }
-
-        try (Scanner leitor = new Scanner(dataFile)) {
-            if (leitor.hasNextInt()) {
-                this.lastPage = leitor.nextInt();
-                this.numberOfItems = leitor.nextInt();
-                this.isEmpty = false;
-            }
-        } catch (IOException e) {
-            System.err.println("Erro ao ler arquivo: " + e.getMessage());
-        }
-    }
-
-    // Para testes
      public WebScraperRepository(String dataFilePath) {
         this.dataFile = new File(dataFilePath);
         this.isEmpty = true; // Assume vazio até ler com sucesso
+        this.numberOfItems = 0;
 
         // Se o arquivo não existe, cria vazio
         if (!dataFile.exists()) {
@@ -61,35 +32,29 @@ public class WebScraperRepository {
 
         try (Scanner leitor = new Scanner(dataFile)) {
             if (leitor.hasNextInt()) {
-                this.lastPage = leitor.nextInt();
                 this.numberOfItems = leitor.nextInt();
                 this.isEmpty = false;
             }
+            else
+                System.out.println("Arquivo vazio. Atualizar informações");
         } catch (IOException e) {
             System.err.println("Erro ao ler arquivo: " + e.getMessage());
         }
     }
 
 
-    public void updateRepository(int newLastPage, int newNumberOfItems) {
-        this.lastPage = newLastPage;
+    public void updateRepository(int newNumberOfItems) {
         this.numberOfItems = newNumberOfItems;
-        try {
-            FileWriter writer = new FileWriter(dataFile);
-            writer.write(String.valueOf(newLastPage) + "\n");
+        try (FileWriter writer = new FileWriter(dataFile)) {
             writer.write(String.valueOf(newNumberOfItems));
             this.isEmpty = false;
             writer.close();
 
         } catch (IOException e) {
-            System.out.println("Error ao escrever o arquivo ao atualizar o repository " + e.getMessage());
+            System.out.println("Erro ao escrever o arquivo ao atualizar o repository " + e.getMessage());
             e.printStackTrace();
         }
 
-    }
-
-    public int getLastPage() {
-        return lastPage;
     }
 
     public int getNumberOfItems() {
