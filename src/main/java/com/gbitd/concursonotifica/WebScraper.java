@@ -14,24 +14,69 @@ import org.jsoup.select.Elements;
 //
 // Checar se há segunda página, se sim, fazer webscrapping da última página
 // Criar arquivo data.dat caso não exista. Armazenar na primeira linha em que página está, e na segunda linha quantos itens (Criar classe repository para isso)
+// Apenas checar se há diferenças entre o número de items armazenado é suficiente para assumir que houve mudança e mandar notificação! Facilita a vida
+// para o caso de novas páginas
 public class WebScraper {
-    public static void main(String[] args) {
-        String url = "https://prh.uem.br/res/concurso-publico/edital-n-o-175-2025-prh-concurso-publico-analista-de-informatica-contador-assistente-social-engenheiro-civil-e-engenheiro-eletricista";
-        try {
-            Document doc = Jsoup.connect(url).get();
-            Elements entries = doc.select(".entry");
-            System.out.println(entries.size());
-            for (Element entry : entries){
-                String entryTitle = entry.select(".contenttype-file").text();
-                if (entryTitle.length()> 4)
-                    System.out.println(entryTitle);
+    private String url;
+    private WebScraperRepository repository;
 
+    public WebScraper(String url, WebScraperRepository repository) {
+        this.url = url;
+        this.repository = repository;
+    }
+
+
+    // Retorna true se a página foi atualizada, e false se não foi
+    public boolean checkIfUpdated(){
+       try {
+            Document doc = Jsoup.connect(url).get();
+
+            // Se existir paginador, significa que os novos elementos estão na última página
+            Element paginator = doc.selectFirst(".pagination");
+            if (paginator == null){
+                Elements entries = doc.select(".entry");
+                int currentNumberOfItems = entries.size();
+                if (currentNumberOfItems != repository.getNumberOfItems()){
+                    repository.updateRepository(currentNumberOfItems);
+                    return true;
+                }
+                else
+                    return false;
+            }
+            else{
+                // Seleciona o link do next page. Quase sempre serão apenas duas páginas. Se não, mudar esta lógica no futuro.
+                Element linkNextPage = doc.selectFirst(".pagination .next a");
+                if (linkNextPage != null){
+                    String urlNextPage = linkNextPage.attr("href");
+                    Document doc2 = Jsoup.connect(urlNextPage).get();
+                    Elements entries = doc2.select(".entry");
+                    int currentNumberOfItems = entries.size();
+                    System.out.println(entries.size());
+                    if (currentNumberOfItems != repository.getNumberOfItems()){
+                        repository.updateRepository(currentNumberOfItems);
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+                else
+                    throw new IllegalStateException("Link para a próxima página não encontrado");
             }
 
         } catch (IOException e) {
             System.out.println("Error IOException" + e.getMessage());
             e.printStackTrace();
+        } catch (IllegalStateException e){
+            System.out.println("Error IllegalStateException" + e.getMessage());
+            e.printStackTrace();
         }
 
+        return false;
+
     }
+
+    public void armazenaDados(int numberOfItems){
+       repository.updateRepository(numberOfItems);
+    }
+
 }
