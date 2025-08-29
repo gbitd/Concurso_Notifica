@@ -36,7 +36,6 @@ class WebScraperRepositoryTest {
     @Test
     void testConstructorWithNewFile() {
         assertTrue(repository.isEmpty());
-        assertEquals(0, repository.getLastPage());
         assertEquals(0, repository.getNumberOfItems());
     }
 
@@ -52,16 +51,14 @@ class WebScraperRepositoryTest {
         repository = new WebScraperRepository(TEST_FILE);
 
         assertFalse(repository.isEmpty());
-        assertEquals(42, repository.getLastPage());
         assertEquals(10, repository.getNumberOfItems());
     }
 
     @Test
     void testUpdateRepository() throws IOException {
         // Teste com valores iniciais
-        repository.updateRepository(5, 20);
+        repository.updateRepository(20);
         assertFalse(repository.isEmpty());
-        assertEquals(5, repository.getLastPage());
         assertEquals(20, repository.getNumberOfItems());
 
         // Verifica conteúdo do arquivo
@@ -73,13 +70,11 @@ class WebScraperRepositoryTest {
 
     @Test
     void testMultipleUpdates() throws IOException {
-        repository.updateRepository(1, 10);
+        repository.updateRepository(10);
         assertFalse(repository.isEmpty());
-        assertEquals(1, repository.getLastPage());
         assertEquals(10, repository.getNumberOfItems());
-        repository.updateRepository(2, 4);
+        repository.updateRepository(4);
         assertFalse(repository.isEmpty());
-        assertEquals(2, repository.getLastPage());
         assertEquals(4, repository.getNumberOfItems());
 
          try (Scanner scanner = new Scanner(new File(TEST_FILE))) {
